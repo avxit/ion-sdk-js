@@ -1,8 +1,8 @@
 import Client, { Configuration } from './client';
-import { LocalStream, RemoteStream, Constraints } from './stream';
+import { Signal, Trickle } from './signal';
 import { BizClient } from './signal/biz';
 import { IonSFUGRPCWebSignal } from './signal/grpc-web-impl';
-import { Signal, Trickle } from './signal';
+import { Constraints, LocalStream, RemoteStream } from './stream';
 export { Client, LocalStream, RemoteStream, Constraints, Signal, Trickle };
 
 export interface JoinResult {
@@ -100,7 +100,7 @@ export class IonConnector {
         this._sfu = sfu;
 
         await sfu.join(this._sid, this._uid);
-        
+
         if (this.onjoin) {
           this.onjoin(success, reason);
         }

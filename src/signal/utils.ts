@@ -9,3 +9,7 @@ export function Uint8ArrayToJSONString(dataArray: Uint8Array): string {
   }
   return dataString;
 }
+
+export const textEncoder = new TextEncoder();
+
+export const textDecoder = new TextDecoder();

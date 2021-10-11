@@ -1,10 +1,10 @@
 import { grpc } from '@improbable-eng/grpc-web';
 import { EventEmitter } from 'events';
+import { JoinResult, PeerState, StreamState } from '../ion';
+import { textDecoder, textEncoder } from './utils';
 import * as biz from './_proto/library/biz/biz_pb';
-import * as ion from './_proto/library/biz/ion_pb';
 import * as biz_rpc from './_proto/library/biz/biz_pb_service';
-import { JoinResult, PeerState, StreamState, Message } from '../ion';
-import { Uint8ArrayToJSONString } from './utils';
+import * as ion from './_proto/library/biz/ion_pb';
 
 export class BizClient extends EventEmitter {
   protected client: biz_rpc.BizClient;
@@ -34,7 +34,7 @@ export class BizClient extends EventEmitter {
           {
             const evt = reply.getPeerevent();
             let state = PeerState.NONE;
-            const info = JSON.parse(Uint8ArrayToJSONString(evt?.getPeer()?.getInfo() as Uint8Array));
+            const info = JSON.parse(textDecoder.decode(evt?.getPeer()?.getInfo() as Uint8Array));
             switch (evt?.getState()) {
               case ion.PeerEvent.State.JOIN:
                 state = PeerState.JOIN;
@@ -91,7 +91,7 @@ export class BizClient extends EventEmitter {
           }
           break;
         case biz.SignalReply.PayloadCase.MSG:
-          const data = JSON.parse(Uint8ArrayToJSONString(reply.getMsg()?.getData() as Uint8Array));
+          const data = JSON.parse(textDecoder.decode(reply.getMsg()?.getData() as Uint8Array));
           const msg = { from: reply.getMsg()?.getFrom() || '', to: reply.getMsg()?.getTo() || '', data: data || {} };
           this.emit('message', msg);
           break;
@@ -107,7 +107,7 @@ export class BizClient extends EventEmitter {
     peer.setSid(sid);
     peer.setUid(uid);
 
-    const buffer = Uint8Array.from(JSON.stringify(info), (c) => c.charCodeAt(0));
+    const buffer = textEncoder.encode(JSON.stringify(info));
     peer.setInfo(buffer);
 
     join.setPeer(peer);
@@ -146,7 +146,7 @@ export class BizClient extends EventEmitter {
     const message = new ion.Message();
     message.setFrom(from);
     message.setTo(to);
-    const buffer = Uint8Array.from(JSON.stringify(data), (c) => c.charCodeAt(0));
+    const buffer = textEncoder.encode(JSON.stringify(data));
     message.setData(buffer);
     request.setMsg(message);
     this.streaming.write(request);

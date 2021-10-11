@@ -1,4 +1,4 @@
 import Client from './client';
-import { LocalStream, RemoteStream, Constraints, Layer } from './stream';
 import { Signal, Trickle } from './signal';
+import { Constraints, Layer, LocalStream, RemoteStream } from './stream';
 export { Client, LocalStream, RemoteStream, Constraints, Signal, Trickle, Layer };
