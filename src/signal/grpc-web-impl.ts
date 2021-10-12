@@ -29,11 +29,14 @@ class IonSFUGRPCWebSignal implements Signal {
     this.streaming.on('data', (reply: SignalReply) => {
       switch (reply.getPayloadCase()) {
         case SignalReply.PayloadCase.JOIN:
-          const answer = JSON.parse(textDecoder.decode(reply.getJoin()?.getDescription() as Uint8Array));
+          const replyJoinDesc = reply.getJoin()?.getDescription();
+          const answer =
+            replyJoinDesc instanceof Uint8Array ? JSON.parse(textDecoder.decode(replyJoinDesc)) : replyJoinDesc;
           this._event.emit('join-reply', answer);
           break;
         case SignalReply.PayloadCase.DESCRIPTION:
-          const desc = JSON.parse(textDecoder.decode(reply.getDescription() as Uint8Array));
+          const replyDesc = reply.getDescription();
+          const desc = replyDesc instanceof Uint8Array ? JSON.parse(textDecoder.decode(replyDesc)) : replyDesc;
           if (desc.type === 'offer') {
             if (this.onnegotiate) this.onnegotiate(desc);
           } else if (desc.type === 'answer') {

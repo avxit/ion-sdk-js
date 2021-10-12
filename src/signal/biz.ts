@@ -34,7 +34,8 @@ export class BizClient extends EventEmitter {
           {
             const evt = reply.getPeerevent();
             let state = PeerState.NONE;
-            const info = JSON.parse(textDecoder.decode(evt?.getPeer()?.getInfo() as Uint8Array));
+            const evtPeerInfo = evt?.getPeer()?.getInfo();
+            const info = evtPeerInfo instanceof Uint8Array ? JSON.parse(textDecoder.decode(evtPeerInfo)) : evtPeerInfo;
             switch (evt?.getState()) {
               case ion.PeerEvent.State.JOIN:
                 state = PeerState.JOIN;
@@ -91,7 +92,8 @@ export class BizClient extends EventEmitter {
           }
           break;
         case biz.SignalReply.PayloadCase.MSG:
-          const data = JSON.parse(textDecoder.decode(reply.getMsg()?.getData() as Uint8Array));
+          const replyMsgData = reply.getMsg()?.getData();
+          const data = replyMsgData instanceof Uint8Array ? JSON.parse(textDecoder.decode(replyMsgData)) : replyMsgData;
           const msg = { from: reply.getMsg()?.getFrom() || '', to: reply.getMsg()?.getTo() || '', data: data || {} };
           this.emit('message', msg);
           break;
