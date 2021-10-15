@@ -294,7 +294,7 @@ export class LocalStream extends MediaStream {
 
       if (this.pc) {
         this.pc.getSenders().forEach(async (sender: RTCRtpSender) => {
-          if (sender?.track?.kind === next.kind) {
+          if (sender?.track?.id === prev.id) {
             sender.track?.stop();
             sender.replaceTrack(next);
           }
