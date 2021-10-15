@@ -2,6 +2,10 @@
 
 Frontend sdk for the Ion backend.
 
+## Changelog
+
+[See here](https://github.com/avxit/ion-sdk-js/commits/patch-1).
+
 ## Installation
 
 `npm install ion-sdk-js`
