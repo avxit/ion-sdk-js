@@ -1,6 +1,6 @@
 {
   "name": "@gcpdev/ion-sdk-js",
-  "version": "1.7.7",
+  "version": "1.7.8",
   "description": "A js sdk for ion sfu",
   "keywords": [
     "pion",
