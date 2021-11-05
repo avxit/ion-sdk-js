@@ -1,10 +1,10 @@
-import { v4 as uuidv4 } from 'uuid';
-import { EventEmitter } from 'events';
-import { Signal } from '.';
 import { grpc } from '@improbable-eng/grpc-web';
-import * as sfu_rpc from '../_library/proto/sfu/sfu_pb_service';
-import * as pb from '../_library/proto/sfu/sfu_pb';
+import { EventEmitter } from 'events';
+import { v4 as uuidv4 } from 'uuid';
+import { Signal } from '.';
 import { Trickle } from '../client';
+import * as pb from '../_library/proto/sfu/sfu_pb';
+import * as sfu_rpc from '../_library/proto/sfu/sfu_pb_service';
 import { Uint8ArrayToJSONString } from './utils';
 
 class IonSFUGRPCWebSignal implements Signal {
@@ -24,7 +24,7 @@ class IonSFUGRPCWebSignal implements Signal {
     }) as grpc.Client<pb.SignalRequest, pb.SignalReply>;
 
     client.onEnd((status: grpc.Code, statusMessage: string, trailers: grpc.Metadata) => {
-      this._onclose?.call(this, new CustomEvent("sfu",{ "detail": {status, statusMessage}}));
+      this._onclose?.call(this, new CustomEvent('sfu', { detail: { status, statusMessage } }));
     });
 
     client.onMessage((reply: pb.SignalReply) => {
@@ -60,7 +60,6 @@ class IonSFUGRPCWebSignal implements Signal {
   }
 
   join(sid: string, uid: string, offer: RTCSessionDescriptionInit) {
-
     const request = new pb.SignalRequest();
     const join = new pb.JoinRequest();
     join.setSid(sid);
