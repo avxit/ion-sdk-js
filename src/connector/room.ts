@@ -1,5 +1,6 @@
 import { grpc } from '@improbable-eng/grpc-web';
 import { EventEmitter } from 'events';
+import { textEncoder } from '../signal/utils';
 import * as room from '../_library/apps/room/proto/room_pb';
 import * as room_rpc from '../_library/apps/room/proto/room_pb_service';
 import { Connector, Service } from './ion';
@@ -379,7 +380,7 @@ class RoomGRPCClient extends EventEmitter {
     message.setFrom(from);
     message.setTo(to);
     const obj = this.mapToObj(data);
-    const buffer = Uint8Array.from(JSON.stringify(obj), (c) => c.charCodeAt(0));
+    const buffer = textEncoder.encode(JSON.stringify(obj));
     message.setType(mineType);
     message.setPayload(buffer);
     sendMessage.setSid(sid);

@@ -5,7 +5,7 @@ import { Signal } from '.';
 import { Trickle } from '../client';
 import * as pb from '../_library/proto/sfu/sfu_pb';
 import * as sfu_rpc from '../_library/proto/sfu/sfu_pb_service';
-import { Uint8ArrayToJSONString } from './utils';
+import { textDecoder, textEncoder } from './utils';
 
 class IonSFUGRPCWebSignal implements Signal {
   protected client: grpc.Client<pb.SignalRequest, pb.SignalReply>;
@@ -30,11 +30,14 @@ class IonSFUGRPCWebSignal implements Signal {
     client.onMessage((reply: pb.SignalReply) => {
       switch (reply.getPayloadCase()) {
         case pb.SignalReply.PayloadCase.JOIN:
-          const answer = JSON.parse(Uint8ArrayToJSONString(reply.getJoin()?.getDescription() as Uint8Array));
+          const replyJoinDesc = reply.getJoin()?.getDescription();
+          const answer =
+            replyJoinDesc instanceof Uint8Array ? JSON.parse(textDecoder.decode(replyJoinDesc)) : replyJoinDesc;
           this._event.emit('join-reply', answer);
           break;
         case pb.SignalReply.PayloadCase.DESCRIPTION:
-          const desc = JSON.parse(Uint8ArrayToJSONString(reply.getDescription() as Uint8Array));
+          const replyDesc = reply.getDescription();
+          const desc = replyDesc instanceof Uint8Array ? JSON.parse(textDecoder.decode(replyDesc)) : replyDesc;
           if (desc.type === 'offer') {
             if (this.onnegotiate) this.onnegotiate(desc);
           } else if (desc.type === 'answer') {
@@ -64,7 +67,7 @@ class IonSFUGRPCWebSignal implements Signal {
     const join = new pb.JoinRequest();
     join.setSid(sid);
     join.setUid(uid);
-    const buffer = Uint8Array.from(JSON.stringify(offer), (c) => c.charCodeAt(0));
+    const buffer = textEncoder.encode(JSON.stringify(offer));
     join.setDescription(buffer);
     request.setJoin(join);
     this.client.send(request);
@@ -89,7 +92,7 @@ class IonSFUGRPCWebSignal implements Signal {
   offer(offer: RTCSessionDescriptionInit) {
     const id = uuidv4();
     const request = new pb.SignalRequest();
-    const buffer = Uint8Array.from(JSON.stringify(offer), (c) => c.charCodeAt(0));
+    const buffer = textEncoder.encode(JSON.stringify(offer));
     request.setDescription(buffer);
     this.client.send(request);
 
@@ -104,7 +107,7 @@ class IonSFUGRPCWebSignal implements Signal {
 
   answer(answer: RTCSessionDescriptionInit) {
     const request = new pb.SignalRequest();
-    const buffer = Uint8Array.from(JSON.stringify(answer), (c) => c.charCodeAt(0));
+    const buffer = textEncoder.encode(JSON.stringify(answer));
     request.setDescription(buffer);
     this.client.send(request);
   }
