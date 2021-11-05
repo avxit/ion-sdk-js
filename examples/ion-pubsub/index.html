@@ -28,42 +28,40 @@
 </head>
 
 <body>
-  <nav class="navbar navbar-light bg-light border-bottom">
+  <nav class="bg-light border-bottom navbar navbar-light">
     <h3>Pion</h3>
   </nav>
   <div class="container pt-4">
     <div class="row" id="start-btns">
       <div class="col-12">
-        <button type="button" class="btn btn-primary" onclick="start(false)">
-          start
-        </button>
+        <button type="button" class="btn btn-primary" onclick="start(false)">start</button>
       </div>
     </div>
-    <div class="row" >
+    <div class="row">
       <div class="col-12">
         <select id="select-box1">
-          <option value="vp8" selected="selected" >vp8</option>
+          <option value="vp8" selected="selected">vp8</option>
           <option value="h264">h264</option>
         </select>
         <select id="select-box2">
           <option value="qvga">qvga_320_180</option>
-          <option value="vga" selected="selected" >vga_640_360</option>
+          <option value="vga" selected="selected">vga_640_360</option>
           <option value="shd">shd_960_540</option>
           <option value="hd">hd_1280_720</option>
           <option value="fhd">qvga_1980_1080</option>
           <option value="fhd">qvga_2560_1440</option>
         </select>
-        <input type="checkbox" id = "check-box">Simulcast
-          <select id="select-box3" style="position: absolute ;margin-right: 5px;">
-          <option value="q" selected="selected" onchange="subscribe()" >Simulcast_q</option>
-          <option value="h" onchange="subscribe()" >Simulcast_h</option>
-          <option value="f" onchange="subscribe()" >Simulcast_f</option>
-          </select>
+        <input type="checkbox" id="check-box" />Simulcast
+        <select id="select-box3" style="position: absolute; margin-right: 5px">
+          <option value="q" selected="selected" onchange="subscribe()">Simulcast_q</option>
+          <option value="h" onchange="subscribe()">Simulcast_h</option>
+          <option value="f" onchange="subscribe()">Simulcast_f</option>
+        </select>
       </div>
     </div>
 
     <div class="row">
-      <div class="col-6 pt-2">
+      <div class="pt-2 col-6">
         <span style="position: absolute; margin-left: 5px; margin-top: 5px" class="badge badge-primary">Local</span>
         <video id="local-video" style="background-color: black" width="320" height="240"></video>
         <div class="controls" style="display: none">
@@ -95,100 +93,81 @@
           </div>
         </div>
       </div>
-      <div id="remotes" class="col-6 pt-2">
+      <div id="remotes" class="pt-2 col-6">
         <span style="position: absolute; margin-left: 5px; margin-top: 5px" class="badge badge-primary">Remotes</span>
-
       </div>
     </div>
 
-      <div class="row">
-        <div class="col-12 pt-4">Event</div>
-      </div>
-      <div class="row">
-        <div class="col-6 pt-2">
-          <pre
-            id="remote-signal"
-            class="d-block border"
-            style="
+    <div class="row">
+      <div class="pt-4 col-12">Event</div>
+    </div>
+    <div class="row">
+      <div class="pt-2 col-6">
+        <pre id="remote-signal" class="border d-block" style="
               background-color: #f8f9fa;
               height: 117px;
               width: 800px;
               margin: 5px 0;
-              word-break;
-              break-all;
-              word-wrap:break-word;
-            "
-          ></pre>
-        </div>
+              word-break: break-all;
+              word-wrap: break-word;
+            "></pre>
       </div>
-      <div class="row">
-        <div class="col-12 pt-4">DataChannel</div>
+    </div>
+    <div class="row">
+      <div class="pt-4 col-12">DataChannel</div>
+    </div>
+    <div class="row">
+      <div class="pt-2 col-6">
+        <textarea id="local-data" class="border d-block"
+          style="background-color: #f8f9fa; height: 117px; width: 320px; margin: 5px 0; padding: 5px"
+          placeholder="Send a message"></textarea>
+        <button type="button" class="btn btn-primary" onclick="send()">send</button>
       </div>
-      <div class="row">
-        <div class="col-6 pt-2">
-          <textarea
-            id="local-data"
-            class="d-block border"
-            style="
-              background-color: #f8f9fa;
-              height: 117px;
-              width: 320px;
-              margin: 5px 0;
-              padding: 5px;
-            "
-            placeholder="Send a message"
-          ></textarea>
-          <button type="button" class="btn btn-primary" onclick="send()">
-            send
-          </button>
-        </div>
-        <div class="col-6 pt-2">
-          <pre
-            id="remote-data"
-            class="d-block border"
-            style="
-              background-color: #f8f9fa;
-              height: 117px;
-              width: 320px;
-              margin: 5px 0;
-            "
-          ></pre>
-        </div>
+      <div class="pt-2 col-6">
+        <pre id="remote-data" class="border d-block"
+          style="background-color: #f8f9fa; height: 117px; width: 320px; margin: 5px 0"></pre>
       </div>
-
+    </div>
   </div>
   <!-- Optional JavaScript -->
   <script src="build/bundle.js"></script>
   <script>
-    const localVideo = document.getElementById("local-video");
-    const remotesDiv = document.getElementById("remotes");
+    const localVideo = document.getElementById('local-video');
+    const remotesDiv = document.getElementById('remotes');
 
     /* eslint-env browser */
-    const joinBtns = document.getElementById("start-btns");
-    const connector = new Ion.Connector("http://localhost:5551");
-    const codecBox = document.getElementById("select-box1");
-    const resolutionBox = document.getElementById("select-box2");
-    const simulcastBox = document.getElementById("check-box");
-    const localData = document.getElementById("local-data");
-    const remoteData = document.getElementById("remote-data");
-    const remoteSignal= document.getElementById("remote-signal");
-    const subscribeBox = document.getElementById("select-box3");
+    const joinBtns = document.getElementById('start-btns');
+    const connector = new Ion.Connector('http://localhost:5551');
+    const codecBox = document.getElementById('select-box1');
+    const resolutionBox = document.getElementById('select-box2');
+    const simulcastBox = document.getElementById('check-box');
+    const localData = document.getElementById('local-data');
+    const remoteData = document.getElementById('remote-data');
+    const remoteSignal = document.getElementById('remote-signal');
+    const subscribeBox = document.getElementById('select-box3');
     let localDataChannel;
     let event;
     connector.onopen = function (svc) {
-      console.log("onopen: service = ", svc.name);
+      console.log('onopen: service = ', svc.name);
     };
 
     connector.onclose = function (svc, err) {
-      console.log("onclose: service = ", svc.name, ", err = ", JSON.stringify(err.detail));
+      console.log('onclose: service = ', svc.name, ', err = ', JSON.stringify(err.detail));
     };
 
     const uid = uuidv4();
-    const sid = "ion";
+    const sid = 'ion';
     const sfu = new Ion.RTC(connector);
 
     sfu.ontrackevent = function (ev) {
-      console.log("ontrackevent: \nuid = ", ev.uid, " \nstate = ", ev.state, ", \ntracks = ", JSON.stringify(ev.tracks));
+      console.log(
+        'ontrackevent: \nuid = ',
+        ev.uid,
+        ' \nstate = ',
+        ev.state,
+        ', \ntracks = ',
+        JSON.stringify(ev.tracks),
+      );
       event = ev;
       /*
       var infos = [];
@@ -206,13 +185,13 @@
     };
 
     sfu.ondatachannel = ({ channel }) => {
-      console.log("sfu.ondatachannel channel=", channel)
+      console.log('sfu.ondatachannel channel=', channel);
       channel.onmessage = ({ data }) => {
         remoteData.innerHTML = remoteData.innerHTML + data + '\n';
       };
     };
 
-    <!-- sfu.connect(); -->
+    sfu.connect();
 
     sfu.join(sid, uid);
 
@@ -224,8 +203,8 @@
         codec: codecBox.options[codecBox.selectedIndex].value,
         audio: true,
         simulcast: simulcastBox.checked,
-      }
-      console.log("getUserMedia constraints=", constraints)
+      };
+      console.log('getUserMedia constraints=', constraints);
       Ion.LocalStream.getUserMedia(constraints)
         .then((media) => {
           localStream = media;
@@ -233,7 +212,7 @@
           localVideo.autoplay = true;
           localVideo.controls = true;
           localVideo.muted = true;
-          joinBtns.style.display = "none";
+          joinBtns.style.display = 'none';
           sfu.publish(media);
           localDataChannel = sfu.createDataChannel(uid);
         })
@@ -241,41 +220,41 @@
     };
 
     const send = () => {
-        if (!localDataChannel) {
-            alert('click "start" first!', '', {
-            confirmButtonText: 'OK',
-          });
-          return
-        }
-      if (localDataChannel.readyState === "open") {
+      if (!localDataChannel) {
+        alert('click "start" first!', '', {
+          confirmButtonText: 'OK',
+        });
+        return;
+      }
+      if (localDataChannel.readyState === 'open') {
         localDataChannel.send(localData.value);
       }
     };
 
     const subscribe = () => {
-        let layer = subscribe.value
-        console.log("subscribe event=", event, "layer=", layer)
-        var infos = [];
-        event.tracks.forEach(t => {
-            if (t.layer === layer){
-              infos.push({
-                track_id: t.id,
-                mute: t.muted,
-                layer: t.layer,
-                subscribe: true
-              });
-            }
-        });
-        console.log("subscribe infos=", infos)
-        sfu.subscribe(infos);
-    }
+      let layer = subscribe.value;
+      console.log('subscribe event=', event, 'layer=', layer);
+      var infos = [];
+      event.tracks.forEach((t) => {
+        if (t.layer === layer) {
+          infos.push({
+            track_id: t.id,
+            mute: t.muted,
+            layer: t.layer,
+            subscribe: true,
+          });
+        }
+      });
+      console.log('subscribe infos=', infos);
+      sfu.subscribe(infos);
+    };
 
     sfu.ontrack = (track, stream) => {
-      console.log("got ", track.kind, " track", track.id, "for stream", stream.id);
-      if (track.kind === "video") {
+      console.log('got ', track.kind, ' track', track.id, 'for stream', stream.id);
+      if (track.kind === 'video') {
         track.onunmute = () => {
           if (!streams[stream.id]) {
-            const remoteVideo = document.createElement("video");
+            const remoteVideo = document.createElement('video');
             remoteVideo.srcObject = stream;
             remoteVideo.autoplay = true;
             remoteVideo.muted = true;
@@ -293,21 +272,20 @@
     };
 
     const controlLocalVideo = (radio) => {
-      if (radio.value === "false") {
-        localStream.mute("video");
+      if (radio.value === 'false') {
+        localStream.mute('video');
       } else {
-        localStream.unmute("video");
+        localStream.unmute('video');
       }
     };
 
     const controlLocalAudio = (radio) => {
-      if (radio.value === "false") {
-        localStream.mute("audio");
+      if (radio.value === 'false') {
+        localStream.mute('audio');
       } else {
-        localStream.unmute("audio");
+        localStream.unmute('audio');
       }
     };
-
   </script>
 </body>
 

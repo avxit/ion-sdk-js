@@ -3,12 +3,12 @@ const path = require('path');
 const WebpackDevServerOutput = require('webpack-dev-server-output');
 
 module.exports = {
-  entry: "../../src/connector/index.ts",
-  mode: "development",
+  entry: '../../src/connector/index.ts',
+  mode: 'development',
   output: {
     path: path.resolve(__dirname, 'build'),
     library: 'Ion',
-    filename: 'bundle.js'
+    filename: 'bundle.js',
   },
   devtool: 'inline-source-map',
   module: {
@@ -17,17 +17,17 @@ module.exports = {
         test: /\.ts$/,
         include: /src/,
         exclude: /node_modules/,
-        loader: "ts-loader"
-      }
-    ]
+        loader: 'ts-loader',
+      },
+    ],
   },
   resolve: {
-    extensions: [".ts", ".js"]
+    extensions: ['.ts', '.js'],
   },
   plugins: [
     new WebpackDevServerOutput({
       path: 'build',
-      isDel: true | false
+      isDel: true | false,
     }),
-  ]
+  ],
 };
