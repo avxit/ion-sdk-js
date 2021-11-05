@@ -1,21 +1,12 @@
 {
   "compilerOptions": {
     "target": "ES2019",
-    "lib": [
-      "dom",
-      "esnext"
-    ],
+    "lib": ["dom", "esnext"],
     "strict": true,
     "module": "commonjs",
     "outDir": "./lib",
     "declaration": true
   },
-  "include": [
-    "decs.d.ts",
-    "src"
-  ],
-  "exclude": [
-    "node_modules",
-    "src/_library"
-  ]
+  "include": ["decs.d.ts", "src"],
+  "exclude": ["node_modules", "src/_library"]
 }
