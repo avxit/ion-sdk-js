@@ -56,7 +56,7 @@ export class Transport {
 
     this.pc.oniceconnectionstatechange = async (e) => {
       if (this.pc.iceConnectionState === 'disconnected') {
-        if (this.pc.restartIce) {
+        if (this.pc.restartIce !== undefined) {
           // this will trigger onNegotiationNeeded
           this.pc.restartIce();
         }
@@ -141,7 +141,6 @@ export default class Client {
     const offer = await this.transports[Role.pub].pc.createOffer();
     await this.transports[Role.pub].pc.setLocalDescription(offer);
     const answer = await this.signal.join(sid, uid, offer);
-
     await this.transports[Role.pub].pc.setRemoteDescription(answer);
     this.transports[Role.pub].candidates.forEach((c) => this.transports![Role.pub].pc.addIceCandidate(c));
     this.transports[Role.pub].pc.onnegotiationneeded = this.onNegotiationNeeded.bind(this);
@@ -170,15 +169,15 @@ export default class Client {
     return this.transports[Role.sub].pc.getStats(selector);
   }
 
-  publish(stream: LocalStream) {
+  publish(stream: LocalStream, encodingParams?: RTCRtpEncodingParameters[]) {
     if (!this.transports) {
       throw Error(ERR_NO_SESSION);
     }
-    stream.publish(this.transports[Role.pub]);
+    stream.publish(this.transports[Role.pub], encodingParams);
   }
 
   restartIce() {
-    this.renegotiate(true)
+    this.renegotiate(true);
   }
 
   createDataChannel(label: string) {
@@ -227,7 +226,7 @@ export default class Client {
   }
 
   private onNegotiationNeeded() {
-    this.renegotiate(false)
+    this.renegotiate(false);
   }
 
   private async renegotiate(iceRestart: boolean) {
